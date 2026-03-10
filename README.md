@@ -1,5 +1,7 @@
 # Bags CLI
 
+[中文版](README.zh.md) | English
+
 ![Bags Agent OS Startup Screen](assets/bags-agent-start.jpg)
 
 **Bags CLI** (previously BagsAgentOS) is an open-source command-line interface (CLI) + interactive AI Agent built specifically for the **Bags** platform — Solana's leading creator-first token launchpad.
@@ -17,7 +19,7 @@ Bags CLI brings terminal + AI automation to this ecosystem: launch faster, manag
 
 ### Interactive AI Agent
 
-Run `bags agent:start` to enter conversational mode:
+Run `bags agent` to enter conversational mode:
 
 ```
 BAGS AGENT OS
@@ -30,21 +32,17 @@ Examples (supports English & Chinese):
 
 ```
 > Launch a dog meme coin called $PupBag with 8.8 billion supply
-> 帮我发一个猫咪主题的代币，名字 $NekoBag，总量10亿，描述：可爱猫咪吃包子
+> 帮我发一个猫咪主题的代币，名字 $NekoBag，总量10亿
 > Check my royalty balance and claim fees
 ```
 
 ### Key Features
 
 - **Conversational AI** — natural language for launch, trade, claim royalties, query stats
-- **Auto config validation** — wallet, RPC, Bags API key checks on startup
+- **Auto config validation** — LLM and Bags API key checks on startup
 - **Bags API integration** — based on official docs at https://docs.bags.fm/
 - **Developer-friendly** — scriptable commands, local-first, extensible
-- **Roadmap**:
-  - Multi-wallet support
-  - Auto-sniping & new token monitoring
-  - Batch launches
-  - Social media auto-promotion helpers
+- **Multi-language support** — English and Chinese
 
 ### Quick Start
 
@@ -53,7 +51,7 @@ Examples (supports English & Chinese):
 git clone https://github.com/Sylvan-Lex/BagsAgentOS.git
 cd BagsAgentOS
 
-# 2. Install dependencies (Node.js + npm required)
+# 2. Install dependencies (Node.js 18+ required)
 npm install
 
 # 3. Link globally
@@ -63,22 +61,37 @@ npm link
 bags config:set --base-url <your-llm-base-url> --model <model-name> --api-key <your-llm-key>
 bags config:set-bags --api-key <your-bags-api-key>
 
-# 5. Start the AI Agent
-bags agent
+# Or use interactive setup
+bags config:init
 ```
 
 ### Commands
 
 ```bash
 # Configuration
-bags config:set --base-url <url> --model <model> --api-key <key>
-bags config:set-bags --api-key <key>
-bags config:show
-bags config:init
-bags config:lang --language <en|zh>
+bags config:set --base-url <url> --model <model> --api-key <key>  # Set LLM config
+bags config:set-bags --api-key <key>                                  # Set Bags API Key
+bags config:show                                                     # Show current config
+bags config:init                                                      # Interactive setup
+bags config:lang --language <en|zh>                                    # Switch language
 
 # Agent
 bags agent        # Start interactive AI Agent mode
+bags agent:start  # Same as above
+```
+
+### Agent Mode Commands
+
+Inside the agent, use `/` commands:
+
+```
+/help     - Show this help message
+/config   - Show current configuration
+/llm      - Set LLM configuration
+/bags     - Set Bags API Key
+/lang     - Set language (en/zh)
+/clear    - Clear chat history
+/exit     - Exit the agent
 ```
 
 ### Related Links
