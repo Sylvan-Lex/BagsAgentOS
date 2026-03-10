@@ -28,6 +28,20 @@ AI Agent for Solana Token Launchpad
 > Enter your question or command...
 ```
 
+### Agent Mode Commands
+
+Inside the agent, use `/` commands:
+
+```
+/help     - Show this help message
+/config   - Show current configuration
+/llm      - Set LLM configuration
+/bags     - Set Bags API Key
+/lang     - Set language (en/zh)
+/clear    - Clear chat history
+/exit     - Exit the agent
+```
+
 Examples (supports English & Chinese):
 
 ```
@@ -78,20 +92,6 @@ bags config:lang --language <en|zh>                                    # Switch 
 # Agent
 bags agent        # Start interactive AI Agent mode
 bags agent:start  # Same as above
-```
-
-### Agent Mode Commands
-
-Inside the agent, use `/` commands:
-
-```
-/help     - Show this help message
-/config   - Show current configuration
-/llm      - Set LLM configuration
-/bags     - Set Bags API Key
-/lang     - Set language (en/zh)
-/clear    - Clear chat history
-/exit     - Exit the agent
 ```
 
 ### Related Links
