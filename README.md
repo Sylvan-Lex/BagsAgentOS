@@ -1,6 +1,6 @@
 # Bags CLI
 
-![Bags Agent OS Startup Screen](assets/bags-agent-start.png)
+![Bags Agent OS Startup Screen](assets/bags-agent-start.jpg)
 
 **Bags CLI** (previously BagsAgentOS) is an open-source command-line interface (CLI) + interactive AI Agent built specifically for the **Bags** platform — Solana's leading creator-first token launchpad.
 

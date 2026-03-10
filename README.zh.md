@@ -1,6 +1,6 @@
 # Bags CLI（原名 BagsAgentOS）
 
-![Bags Agent 启动界面](assets/bags-agent-start.png)
+![Bags Agent 启动界面](assets/bags-agent-start.jpg)
 
 **Bags CLI** 是一个开源的命令行工具 + AI Agent，专为 Solana 上最受欢迎的创作者优先 Launchpad —— **Bags** 平台打造。
 
