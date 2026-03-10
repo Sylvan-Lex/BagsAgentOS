@@ -1,0 +1,17 @@
+name: bags
+version: 1.0.0
+description: Bags CLI Agent - AI Agent for Solana Token Launchpad
+bin: bags
+main: ./dist/index.js
+commands:
+  ./dist/commands/config/set.js
+  ./dist/commands/config/set-bags.js
+  ./dist/commands/config/show.js
+  ./dist/commands/config/init.js
+  ./dist/commands/config/lang.js
+  ./dist/commands/agent/start.js
+hooks:
+  init:
+    - ./dist/hooks/init.js
+plugins:
+  - '@oclif/plugin-help'
