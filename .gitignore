@@ -18,3 +18,6 @@ oclif.manifest.json
 # Environment
 .env
 .env.local
+# API Keys - DO NOT COMMIT
+*.env
+!.env.example

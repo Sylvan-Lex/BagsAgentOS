@@ -1,71 +1,81 @@
 import { Command } from '@oclif/core';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
-import { setLLMConfig, setBagsConfig, loadConfig } from '../../lib/config.js';
+import { setLLMConfig, setBagsConfig, getLanguage, setLanguage } from '../../lib/config.js';
 
-export default class ConfigInitCommand extends Command {
+export default class ConfigInit extends Command {
   static description = '交互式初始化配置';
 
-  static examples = [
-    '$ bags config:init',
-  ];
+  static examples = ['$ bags config:init'];
 
   async run(): Promise<void> {
-    this.log(chalk.bold('\n🔧 Bags Agent 配置向导\n'));
+    const lang = getLanguage();
+    const isZh = lang === 'zh';
 
-    // 检查现有配置
-    const config = loadConfig();
+    this.log(chalk.bold(isZh ? '\n🔧 初始化配置...' : '\n🔧 Initializing configuration...\n'));
+
+    // 语言选择
+    const langAnswer = await inquirer.prompt([
+      {
+        type: 'list',
+        name: 'language',
+        message: isZh ? '选择语言 / Select Language:' : 'Select Language:',
+        choices: [
+          { name: 'English', value: 'en' },
+          { name: '中文', value: 'zh' },
+        ],
+        default: lang || 'en',
+      },
+    ]);
+    
+    setLanguage(langAnswer.language);
+    const t = langAnswer.language === 'zh';
 
     // LLM 配置
     const llmAnswers = await inquirer.prompt([
       {
         type: 'input',
         name: 'baseUrl',
-        message: 'LLM Base URL:',
-        default: config.llm?.baseUrl || 'https://api.openai.com/v1',
+        message: t ? 'LLM Base URL:' : 'LLM Base URL:',
+        default: 'https://mgallery.haier.net/v1',
       },
       {
         type: 'input',
         name: 'model',
-        message: 'Model 名称:',
-        default: config.llm?.model || 'gpt-4',
+        message: t ? 'Model:' : 'Model:',
+        default: 'MiniMax-M2',
       },
       {
         type: 'password',
         name: 'apiKey',
-        message: 'LLM API Key:',
+        message: t ? 'API Key:' : 'API Key:',
         mask: '*',
       },
     ]);
 
-    // Bags 配置
-    const bagsAnswers = await inquirer.prompt([
-      {
-        type: 'input',
-        name: 'apiKey',
-        message: 'Bags API Key:',
-      },
-      {
-        type: 'input',
-        name: 'moltbookUsername',
-        message: 'Moltbook 用户名 (可选):',
-        default: config.bags?.moltbookUsername || '',
-      },
-    ]);
-
-    // 保存配置
     setLLMConfig({
       baseUrl: llmAnswers.baseUrl,
       model: llmAnswers.model,
       apiKey: llmAnswers.apiKey,
     });
 
-    setBagsConfig({
-      apiKey: bagsAnswers.apiKey,
-      moltbookUsername: bagsAnswers.moltbookUsername || '',
-    });
+    // Bags 配置
+    const bagsAnswers = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'apiKey',
+        message: t ? 'Bags API Key (可选，回车跳过):' : 'Bags API Key (optional, skip with enter):',
+        default: '',
+      },
+    ]);
 
-    this.log(chalk.green('\n✓ 配置已保存!'));
-    this.log(chalk.gray('\n运行 ') + chalk.cyan('bags agent') + chalk.gray(' 启动交互模式'));
+    if (bagsAnswers.apiKey) {
+      setBagsConfig({ apiKey: bagsAnswers.apiKey });
+    }
+
+    this.log(chalk.green(`\n${t ? '✓ 配置完成!' : '✓ Configuration complete!'}\n`));
+    
+    this.log(chalk.cyan(t ? '运行以下命令启动:' : 'Run the following to start:'));
+    this.log(chalk.gray('  bags agent'));
   }
 }

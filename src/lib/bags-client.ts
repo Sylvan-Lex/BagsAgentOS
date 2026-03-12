@@ -10,18 +10,22 @@ export interface ApiResponse<T> {
 export interface Wallet {
   address: string;
   publicKey: string;
+  createdAt?: string;
 }
 
 export interface ClaimablePosition {
   mint: string;
   tokenSymbol: string;
   claimableAmount: number;
+  tokenName?: string;
 }
 
 export interface TradeQuote {
   inAmount: string;
   outAmount: string;
   priceImpact: string;
+  fromMint: string;
+  toMint: string;
 }
 
 export interface TokenInfo {
@@ -39,13 +43,15 @@ export interface FeeShareConfig {
   }>;
 }
 
+export interface TokenLaunchResult {
+  tokenAddress: string;
+  signature: string;
+}
+
 export class BagsClient {
   private apiKey: string = '';
   private jwtToken: string = '';
 
-  /**
-   * 初始化客户端
-   */
   init(): void {
     const config = getBagsConfig();
     if (!config?.apiKey) {
@@ -55,9 +61,6 @@ export class BagsClient {
     this.jwtToken = config.jwtToken || '';
   }
 
-  /**
-   * 发送 API 请求
-   */
   private async request<T>(
     endpoint: string,
     options: {
@@ -79,7 +82,9 @@ export class BagsClient {
       headers['Authorization'] = `Bearer ${this.jwtToken}`;
     }
 
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
+    const url = endpoint.includes('?') ? `${BASE_URL}${endpoint}` : `${BASE_URL}${endpoint}`;
+    
+    const response = await fetch(url, {
       method: options.method || 'GET',
       headers,
       body: options.body ? JSON.stringify(options.body) : undefined,
@@ -93,11 +98,7 @@ export class BagsClient {
     return response.json();
   }
 
-  // ===== 认证相关 =====
-
-  /**
-   * 初始化认证会话
-   */
+  // ===== 认证 =====
   async initAuth(username: string): Promise<{ postId: string }> {
     return this.request('/agent/auth/init', {
       method: 'POST',
@@ -106,9 +107,6 @@ export class BagsClient {
     });
   }
 
-  /**
-   * 完成登录获取 JWT
-   */
   async login(username: string, postId: string): Promise<{ token: string }> {
     return this.request('/agent/auth/login', {
       method: 'POST',
@@ -117,9 +115,6 @@ export class BagsClient {
     });
   }
 
-  /**
-   * 创建 API Key
-   */
   async createDevKey(name: string): Promise<{ apiKey: string }> {
     return this.request('/agent/dev/keys/create', {
       method: 'POST',
@@ -127,11 +122,7 @@ export class BagsClient {
     });
   }
 
-  // ===== 钱包相关 =====
-
-  /**
-   * 列出钱包
-   */
+  // ===== 钱包 =====
   async listWallets(): Promise<{ wallets: Wallet[] }> {
     return this.request('/agent/wallet/list', {
       method: 'POST',
@@ -139,9 +130,6 @@ export class BagsClient {
     });
   }
 
-  /**
-   * 导出私钥（注意：返回的是加密后的私钥，需要解密）
-   */
   async exportWallet(walletAddress: string): Promise<{ encryptedPrivateKey: string }> {
     return this.request('/agent/wallet/export', {
       method: 'POST',
@@ -149,20 +137,20 @@ export class BagsClient {
     });
   }
 
-  // ===== 费用相关 =====
+  async getBalance(walletAddress: string): Promise<{ sol: number; tokens: any[] }> {
+    return this.request('/agent/wallet/balance', {
+      method: 'POST',
+      body: { token: this.jwtToken, wallet: walletAddress },
+    });
+  }
 
-  /**
-   * 获取可领取费用
-   */
+  // ===== 费用 =====
   async getClaimablePositions(wallet: string): Promise<{ positions: ClaimablePosition[] }> {
     return this.request(`/token-launch/claimable-positions?wallet=${wallet}`, {
       requireAuth: false,
     });
   }
 
-  /**
-   * 领取费用
-   */
   async claimFees(
     wallet: string,
     positions: Array<{ mint: string; amount: number }>
@@ -173,20 +161,13 @@ export class BagsClient {
     });
   }
 
-  /**
-   * 获取代币总费用
-   */
   async getLifetimeFees(mint: string): Promise<{ totalFees: number }> {
     return this.request(`/token-launch/lifetime-fees?mint=${mint}`, {
       requireAuth: false,
     });
   }
 
-  // ===== 交易相关 =====
-
-  /**
-   * 获取交易报价
-   */
+  // ===== 交易 =====
   async getQuote(
     fromMint: string,
     toMint: string,
@@ -198,9 +179,6 @@ export class BagsClient {
     );
   }
 
-  /**
-   * 执行交易
-   */
   async swap(
     wallet: string,
     quote: TradeQuote
@@ -212,10 +190,6 @@ export class BagsClient {
   }
 
   // ===== 代币发射 =====
-
-  /**
-   * 创建代币信息
-   */
   async createTokenInfo(tokenInfo: TokenInfo): Promise<{ tokenInfoId: string }> {
     return this.request('/token-launch/create-token-info', {
       method: 'POST',
@@ -223,9 +197,6 @@ export class BagsClient {
     });
   }
 
-  /**
-   * 配置费用分成
-   */
   async configFeeShare(config: FeeShareConfig): Promise<{ configId: string }> {
     return this.request('/fee-share/config', {
       method: 'POST',
@@ -233,9 +204,6 @@ export class BagsClient {
     });
   }
 
-  /**
-   * 创建发射交易
-   */
   async createLaunchTransaction(
     tokenInfo: TokenInfo,
     feeShareConfig: FeeShareConfig
@@ -246,9 +214,6 @@ export class BagsClient {
     });
   }
 
-  /**
-   * 查询其他身份钱包
-   */
   async lookupWallet(
     provider: 'moltbook' | 'twitter' | 'github',
     username: string
@@ -260,10 +225,6 @@ export class BagsClient {
   }
 
   // ===== 区块链 =====
-
-  /**
-   * 发送已签名交易
-   */
   async sendTransaction(transaction: string): Promise<{ signature: string }> {
     return this.request('/solana/send-transaction', {
       method: 'POST',
@@ -271,14 +232,11 @@ export class BagsClient {
     });
   }
 
-  /**
-   * 检查是否已配置
-   */
+  // ===== 工具 =====
   isConfigured(): boolean {
     const config = getBagsConfig();
     return !!config?.apiKey;
   }
 }
 
-// 导出单例
 export const bagsClient = new BagsClient();

@@ -24,8 +24,8 @@ const store = new Conf<AppConfig>({
   projectName: 'bags-agent',
   defaults: {
     llm: {
-      baseUrl: 'https://api.openai.com/v1',
-      model: 'gpt-4',
+      baseUrl: 'https://mgallery.haier.net/v1',
+      model: 'MiniMax-M2',
       apiKey: '',
     },
     bags: {

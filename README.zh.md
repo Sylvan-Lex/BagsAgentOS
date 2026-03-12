@@ -1,108 +1,254 @@
-# Bags CLI（原名 BagsAgentOS）
+# BagsAgentOS 🤖
 
-[English](README.md) | 中文版
+Solana 代币发射平台 AI Agent
 
-![Bags Agent 启动界面](assets/bags-agent-start.jpg)
+[中文](README.zh.md) | [English](README.md)
 
-**Bags CLI** 是一个开源的命令行工具 + AI Agent，专为 Solana 上最受欢迎的创作者优先 Launchpad —— **Bags** 平台打造。
+[![npm version](https://img.shields.io/npm/v/bags-agent)](https://www.npmjs.com/package/bags-agent)
+[![License](https://img.shields.io/github/license/Sylvan-Lex/BagsAgentOS)](LICENSE)
 
-### Bags 平台简介
-
-https://bags.fm/ 是一个零代码 Solana 代币发射平台，允许任何人快速创建 meme币/项目代币，**创建者永久从每笔交易中抽取 1% 的版税（royalty）**。平台数据亮眼：
-
-- 创建者累计收益 **3100万美元+**
-- 总交易量 **50亿美元+**
-- 已资助项目 **25万个+**
-
-相比 pump.fun 等平台，Bags 更注重创作者的长期收益。
-
-Bags CLI 把这一切搬到命令行 + AI 加持：自动化发射、可脚本化、对话式操作，再也不用一直刷网页。
-
-### 交互式 AI Agent
-
-运行 `bags agent` 进入对话模式：
-
-```
-BAGS AGENT OS
-Solana Token Launchpad AI Agent
-✓ 配置检查通过
-> 请输入你的问题或指令，按 Enter 发送...
-```
-
-### Agent 模式 / 命令
-
-在 Agent 模式下使用 `/` 命令：
-
-```
-/help     - 显示帮助信息
-/config   - 显示当前配置
-/llm      - 设置 LLM 配置
-/bags     - 设置 Bags API Key
-/lang     - 设置语言 (en/zh)
-/clear    - 清除聊天记录
-/exit     - 退出 Agent
-```
-
-支持中英文自然语言：
-
-```
-> 帮我发射一个狗狗主题 meme 币，名字 $PupBag，总量 88亿
-> 创建猫咪主题代币 $NekoBag，供应量10亿
-> 查询我的版税余额并领取
-```
-
-### 核心功能
-
-- 对话式 AI Agent：创建代币、交易、领取版税、查看数据
-- 启动时自动检查配置（LLM、Bags API Key）
-- 完整对接 Bags 官方 API（https://docs.bags.fm/）
-- 本地优先、适合开发者 / 批量 / 自动化场景
-- 多语言支持：英文/中文
-
-### 快速开始
-
-```bash
-# 1. 克隆仓库
-git clone https://github.com/Sylvan-Lex/BagsAgentOS.git
-cd BagsAgentOS
-
-# 2. 安装依赖（需要 Node.js 18+）
-npm install
-
-# 3. 全局链接
-npm link
-
-# 4. 配置 LLM 和 Bags API Key
-bags config:set --base-url <你的LLM接口地址> --model <模型名称> --api-key <你的LLM密钥>
-bags config:set-bags --api-key <你的Bags-API-Key>
-
-# 或使用交互式配置
-bags config:init
-```
-
-### 命令列表
-
-```bash
-# 配置命令
-bags config:set --base-url <url> --model <model> --api-key <key>  # 设置 LLM 配置
-bags config:set-bags --api-key <key>                                  # 设置 Bags API Key
-bags config:show                                                     # 显示当前配置
-bags config:init                                                      # 交互式配置
-bags config:lang --language <en|zh>                                   # 切换语言
-
-# Agent 模式
-bags agent        # 启动交互式 AI Agent
-bags agent:start  # 同上
-```
-
-### 相关链接
-
-- Bags 平台：https://bags.fm/
-- 官方 API 文档：https://docs.bags.fm/
-- 开发者门户（申请 API Key）：https://dev.bags.fm/
-- GitHub 仓库：https://github.com/Sylvan-Lex/BagsAgentOS
+[Bags 平台](https://bags.fm/) · [API 文档](https://docs.bags.fm/) · [开发者门户](https://dev.bags.fm/)
 
 ---
 
-项目刚启动（非常早期），欢迎 star / fork / 提 issue / PR！
-一起把 Solana Launchpad 的效率卷到飞起！
+## ✨ 功能特点
+
+- 🤖 **AI Agent** - 自然语言交互执行代币操作
+- 💰 **代币发射** - 在 Solana 上创建新代币
+- 🔄 **交易** - 通过 Jupiter 聚合器交换代币
+- 💎 **费用管理** - 领取累积的版税
+- 🌐 **多语言** - 支持中英文
+- ⚡ **OpenAI SDK** - 兼容任何 OpenAI 兼容的 LLM
+
+---
+
+## 🚀 快速开始
+
+```bash
+# 克隆并安装
+git clone https://github.com/Sylvan-Lex/BagsAgentOS.git
+cd BagsAgentOS
+npm install
+npm run build
+
+# 运行
+bags agent
+```
+
+---
+
+## 📖 命令列表
+
+### 核心命令
+
+| 命令 | 说明 |
+|------|------|
+| `bags agent` | 启动交互式 AI Agent |
+| `bags status` | 检查系统状态 |
+| `bags version` | 显示版本信息 |
+
+### 配置命令
+
+| 命令 | 说明 |
+|------|------|
+| `bags config:show` | 显示当前配置 |
+| `bags config:init` | 交互式配置向导 |
+| `bags config:set` | 设置 LLM 配置 |
+| `bags config:set-bags` | 设置 Bags API Key |
+| `bags config:export` | 导出/导入配置 |
+
+### 钱包操作
+
+| 命令 | 说明 |
+|------|------|
+| `bags wallet:list` | 列出关联钱包 |
+| `bags wallet:balance` | 查看钱包余额 |
+
+### 代币操作
+
+| 命令 | 说明 |
+|------|------|
+| `bags launch:token` | 发射新代币 |
+| `bags tokens:popular` | 常用代币列表 |
+| `bags search:token` | 按提供商搜索代币 |
+
+### 交易
+
+| 命令 | 说明 |
+|------|------|
+| `bags trade:swap` | 交换代币 |
+
+### 费用管理
+
+| 命令 | 说明 |
+|------|------|
+| `bags claim:fees` | 领取可领取费用 |
+
+---
+
+## 🤖 Agent 模式命令
+
+运行 `bags agent` 后，使用以下命令：
+
+```
+/help     - 显示帮助
+/config   - 显示配置
+/llm      - 设置 LLM
+/bags     - 设置 Bags API
+/lang     - 设置语言 (en/zh)
+/clear    - 清除历史
+/wallets  - 列出钱包
+/balance  - 查看余额
+/fees     - 查看费用
+/quote    - 获取报价
+/exit     - 退出
+```
+
+### 使用示例
+
+```
+> 发射一个狗狗币叫 $PupBag
+> 查看我的版税余额并领取
+> 把 1 SOL 换成 USDC
+> Launch a dog coin called $PupBag
+```
+
+---
+
+## ⚙️ 配置
+
+默认 LLM 已预配置 (MiniMax-M2):
+
+```
+Base URL: https://mgallery.haier.net/v1
+Model: MiniMax-M2
+```
+
+### 自定义 LLM
+
+```bash
+bags config:set --base-url <url> --model <model> --api-key <key>
+```
+
+或在 Agent 模式下：
+```
+/llm
+```
+
+### Bags API Key
+
+```bash
+bags config:set-bags --api-key <your-bags-key>
+```
+
+或在 Agent 模式下：
+```
+/bags <your-api-key>
+```
+
+---
+
+## 💻 使用示例
+
+### 查看系统状态
+
+```bash
+$ bags status
+
+🔍 系统状态检查
+
+LLM:
+  ✓ 已配置
+    URL: https://mgallery.haier.net/v1
+    Model: MiniMax-M2
+  ✓ 连接成功
+
+Bags:
+  ⚠ 未配置 (可选)
+```
+
+### 列出钱包
+
+```bash
+$ bags wallet:list
+
+钱包列表:
+  YourWalletAddress...
+```
+
+### 获取兑换报价
+
+```bash
+$ bags trade:swap --from So11111111111111111111111111111111111111112 --to EPjFWdd5AufqSSCwM1X5RUor4S6veMA2FVFkGPz8Srtv --amount 1
+```
+
+### 发射代币
+
+```bash
+$ bags launch:token --name "我的代币" --symbol MTK --supply 1000000000
+```
+
+### 交互式 Agent
+
+```bash
+$ bags agent
+
+BAGS AGENT OS
+AI Agent for Solana Token Launchpad
+✓ 配置检查通过
+
+> 发射一个狗狗币
+```
+
+---
+
+## 🔧 开发
+
+```bash
+npm run build    # 构建 TypeScript
+npm run dev      # 开发模式
+bags --help      # 显示帮助
+```
+
+---
+
+## 📁 项目结构
+
+```
+BagsAgentOS/
+├── bin/
+│   └── run.cjs          # 可执行文件
+├── src/
+│   ├── commands/        # CLI 命令
+│   │   ├── agent/       # Agent 模式
+│   │   ├── claim/       # 领取费用
+│   │   ├── config/      # 配置
+│   │   ├── launch/      # 代币发射
+│   │   ├── search/      # 代币搜索
+│   │   ├── tokens/      # 代币列表
+│   │   ├── trade/       # 交易
+│   │   └── wallet/      # 钱包操作
+│   └── lib/             # 库
+│       ├── bags-client.ts
+│       ├── llm.ts
+│       ├── config.ts
+│       ├── utils.ts
+│       └── ...
+├── EXAMPLES.md          # 示例
+└── package.json
+```
+
+---
+
+## 📄 许可证
+
+MIT
+
+---
+
+## 🔗 相关链接
+
+- [Bags 平台](https://bags.fm/)
+- [API 文档](https://docs.bags.fm/)
+- [开发者门户](https://dev.bags.fm/)
+- [GitHub](https://github.com/Sylvan-Lex/BagsAgentOS)

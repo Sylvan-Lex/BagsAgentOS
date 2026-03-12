@@ -1,36 +1,94 @@
-# Bags CLI
+# BagsAgentOS 🤖
 
-[中文版](README.zh.md) | English
-
-![Bags Agent OS Startup Screen](assets/bags-agent-start.jpg)
-
-**Bags CLI** (previously BagsAgentOS) is an open-source command-line interface (CLI) + interactive AI Agent built specifically for the **Bags** platform — Solana's leading creator-first token launchpad.
-
-### What is Bags?
-
-[Bags.fm](https://bags.fm/) is a zero-code Solana launchpad that empowers creators to launch tokens (especially meme coins and community projects) while earning **1% royalty** on every trade forever. Platform highlights:
-
-- **$31M+** in creator earnings
-- **$5B+** in cumulative trading volume
-- **250K+** projects launched
-- Strong focus on long-term creator revenue (unlike many competitors)
-
-Bags CLI brings terminal + AI automation to this ecosystem: launch faster, manage programmatically, and interact conversationally — no browser required.
-
-### Interactive AI Agent
-
-Run `bags agent` to enter conversational mode:
-
-```
-BAGS AGENT OS
 AI Agent for Solana Token Launchpad
-✓ Configuration check passed
-> Enter your question or command...
+
+[中文](README.zh.md) | [English](README.md)
+
+[![npm version](https://img.shields.io/npm/v/bags-agent)](https://www.npmjs.com/package/bags-agent)
+[![License](https://img.shields.io/github/license/Sylvan-Lex/BagsAgentOS)](LICENSE)
+
+[Bags Platform](https://bags.fm/) · [API Docs](https://docs.bags.fm/) · [Dev Portal](https://dev.bags.fm/)
+
+---
+
+## ✨ Features
+
+- 🤖 **AI Agent** - Natural language interaction for token operations
+- 💰 **Token Launch** - Create new tokens on Solana
+- 🔄 **Trading** - Swap tokens via Jupiter aggregator
+- 💎 **Fee Management** - Claim accumulated royalties
+- 🌐 **Multi-language** - English and Chinese support
+- ⚡ **OpenAI SDK** - Compatible with any OpenAI-compatible LLM
+
+---
+
+## 🚀 Quick Start
+
+```bash
+# Clone & Install
+git clone https://github.com/Sylvan-Lex/BagsAgentOS.git
+cd BagsAgentOS
+npm install
+npm run build
+
+# Run
+bags agent
 ```
 
-### Agent Mode Commands
+---
 
-Inside the agent, use `/` commands:
+## 📖 Commands
+
+### Core Commands
+
+| Command | Description |
+|---------|-------------|
+| `bags agent` | Start interactive AI Agent |
+| `bags status` | Check system status |
+| `bags version` | Show version info |
+
+### Configuration
+
+| Command | Description |
+|---------|-------------|
+| `bags config:show` | Show current config |
+| `bags config:init` | Interactive setup wizard |
+| `bags config:set` | Set LLM config |
+| `bags config:set-bags` | Set Bags API Key |
+| `bags config:export` | Export/import config |
+
+### Wallet Operations
+
+| Command | Description |
+|---------|-------------|
+| `bags wallet:list` | List connected wallets |
+| `bags wallet:balance` | Check wallet balance |
+
+### Token Operations
+
+| Command | Description |
+|---------|-------------|
+| `bags launch:token` | Launch new token |
+| `bags tokens:popular` | Show popular tokens |
+| `bags search:token` | Search token by provider |
+
+### Trading
+
+| Command | Description |
+|---------|-------------|
+| `bags trade:swap` | Swap tokens |
+
+### Fee Management
+
+| Command | Description |
+|---------|-------------|
+| `bags claim:fees` | Claim accumulated fees |
+
+---
+
+## 🤖 Agent Mode Commands
+
+After running `bags agent`, use these commands:
 
 ```
 /help     - Show this help message
@@ -39,68 +97,158 @@ Inside the agent, use `/` commands:
 /bags     - Set Bags API Key
 /lang     - Set language (en/zh)
 /clear    - Clear chat history
+/wallets  - List connected wallets
+/balance  - Check wallet balance
+/fees     - Check claimable fees
+/quote    - Get swap quote
 /exit     - Exit the agent
 ```
 
-Examples (supports English & Chinese):
+### Examples
 
 ```
 > Launch a dog meme coin called $PupBag with 8.8 billion supply
-> 帮我发一个猫咪主题的代币，名字 $NekoBag，总量10亿
 > Check my royalty balance and claim fees
+> Swap 1 SOL to USDC
+> 帮我发一个猫咪主题的代币
 ```
-
-### Key Features
-
-- **Conversational AI** — natural language for launch, trade, claim royalties, query stats
-- **Auto config validation** — LLM and Bags API key checks on startup
-- **Bags API integration** — based on official docs at https://docs.bags.fm/
-- **Developer-friendly** — scriptable commands, local-first, extensible
-- **Multi-language support** — English and Chinese
-
-### Quick Start
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/Sylvan-Lex/BagsAgentOS.git
-cd BagsAgentOS
-
-# 2. Install dependencies (Node.js 18+ required)
-npm install
-
-# 3. Link globally
-npm link
-
-# 4. Configure your LLM and Bags API Key
-bags config:set --base-url <your-llm-base-url> --model <model-name> --api-key <your-llm-key>
-bags config:set-bags --api-key <your-bags-api-key>
-
-# Or use interactive setup
-bags config:init
-```
-
-### Commands
-
-```bash
-# Configuration
-bags config:set --base-url <url> --model <model> --api-key <key>  # Set LLM config
-bags config:set-bags --api-key <key>                                  # Set Bags API Key
-bags config:show                                                     # Show current config
-bags config:init                                                      # Interactive setup
-bags config:lang --language <en|zh>                                    # Switch language
-
-# Agent
-bags agent        # Start interactive AI Agent mode
-bags agent:start  # Same as above
-```
-
-### Related Links
-
-- Bags Platform: https://bags.fm/
-- Official API Docs: https://docs.bags.fm/
-- Developer Portal (API keys): https://dev.bags.fm/
-- GitHub Repository: https://github.com/Sylvan-Lex/BagsAgentOS
 
 ---
 
-Project is in very early stage. Welcome stars, forks, issues, PRs! Let's build the most powerful Solana launch tool together.
+## ⚙️ Configuration
+
+Default LLM is pre-configured (MiniMax-M2):
+
+```
+Base URL: https://mgallery.haier.net/v1
+Model: MiniMax-M2
+```
+
+### Customize LLM
+
+```bash
+bags config:set --base-url <url> --model <model> --api-key <key>
+```
+
+Or in Agent mode:
+```
+/llm
+```
+
+### Bags API Key
+
+```bash
+bags config:set-bags --api-key <your-bags-key>
+```
+
+Or in Agent mode:
+```
+/bags <your-api-key>
+```
+
+---
+
+## 💻 Examples
+
+### Check System Status
+
+```bash
+$ bags status
+
+🔍 System Status Check
+
+LLM:
+  ✓ Configured
+    URL: https://mgallery.haier.net/v1
+    Model: MiniMax-M2
+  ✓ Connection OK
+
+Bags:
+  ⚠ Not configured (optional)
+```
+
+### List Wallets
+
+```bash
+$ bags wallet:list
+
+Wallets:
+  YourWalletAddress...
+```
+
+### Get Swap Quote
+
+```bash
+$ bags trade:swap --from So11111111111111111111111111111111111111112 --to EPjFWdd5AufqSSCwM1X5RUor4S6veMA2FVFkGPz8Srtv --amount 1
+```
+
+### Launch Token
+
+```bash
+$ bags launch:token --name "My Token" --symbol MTK --supply 1000000000
+```
+
+### Interactive Agent
+
+```bash
+$ bags agent
+
+BAGS AGENT OS
+AI Agent for Solana Token Launchpad
+✓ Configuration check passed
+
+> Launch a dog coin called $PupBag
+```
+
+---
+
+## 🔧 Development
+
+```bash
+npm run build    # Build TypeScript
+npm run dev      # Dev mode
+bags --help      # Show help
+```
+
+---
+
+## 📁 Project Structure
+
+```
+BagsAgentOS/
+├── bin/
+│   └── run.cjs          # Executable
+├── src/
+│   ├── commands/        # CLI commands
+│   │   ├── agent/       # Agent mode
+│   │   ├── claim/       # Fee claims
+│   │   ├── config/      # Configuration
+│   │   ├── launch/      # Token launch
+│   │   ├── search/      # Token search
+│   │   ├── tokens/      # Token lists
+│   │   ├── trade/       # Trading
+│   │   └── wallet/      # Wallet ops
+│   └── lib/             # Libraries
+│       ├── bags-client.ts
+│       ├── llm.ts
+│       ├── config.ts
+│       ├── utils.ts
+│       └── ...
+├── EXAMPLES.md          # Examples
+└── package.json
+```
+
+---
+
+## 📄 License
+
+MIT
+
+---
+
+## 🔗 Links
+
+- [Bags Platform](https://bags.fm/)
+- [API Documentation](https://docs.bags.fm/)
+- [Developer Portal](https://dev.bags.fm/)
+- [GitHub](https://github.com/Sylvan-Lex/BagsAgentOS)

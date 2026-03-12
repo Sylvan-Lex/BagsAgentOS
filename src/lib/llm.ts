@@ -1,9 +1,9 @@
-import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 import { getLLMConfig } from './config.js';
 import { Readable } from 'stream';
 
 export interface LLMMessage {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   content: string;
 }
 
@@ -12,7 +12,7 @@ export interface LLMStreamCallback {
 }
 
 export class LLMClient {
-  private client: Anthropic | null = null;
+  private client: OpenAI | null = null;
 
   /**
    * 初始化 LLM 客户端
@@ -24,13 +24,15 @@ export class LLMClient {
     }
 
     // 处理 baseUrl，确保不会重复追加 /v1
-    let baseUrl = config.baseUrl || 'https://api.anthropic.com';
+    let baseUrl = config.baseUrl || 'https://api.openai.com/v1';
     // 移除末尾的斜杠
     baseUrl = baseUrl.replace(/\/$/, '');
-    // 移除末尾的 /v1 或 /v1/，因为 SDK 会自动添加
-    baseUrl = baseUrl.replace(/\/v1\/?$/, '');
+    // 如果没有 /v1，添加它
+    if (!baseUrl.endsWith('/v1')) {
+      baseUrl = baseUrl + '/v1';
+    }
 
-    this.client = new Anthropic({
+    this.client = new OpenAI({
       apiKey: config.apiKey,
       baseURL: baseUrl,
     });
@@ -48,16 +50,21 @@ export class LLMClient {
     }
 
     const config = getLLMConfig();
-    const response = await this.client!.messages.create({
-      model: config?.model || 'claude-3-5-sonnet-20241022',
+    
+    // 构建消息列表
+    const chatMessages: any[] = [];
+    if (systemPrompt) {
+      chatMessages.push({ role: 'system', content: systemPrompt });
+    }
+    chatMessages.push(...messages);
+
+    const response = await this.client!.chat.completions.create({
+      model: config?.model || 'MiniMax-M2',
       max_tokens: 4096,
-      system: systemPrompt,
-      messages: messages as any,
+      messages: chatMessages,
     });
 
-    return response.content[0].type === 'text'
-      ? response.content[0].text
-      : '';
+    return response.choices[0]?.message?.content || '';
   }
 
   /**
@@ -74,18 +81,24 @@ export class LLMClient {
 
     const config = getLLMConfig();
 
-    const stream = await this.client!.messages.stream({
-      model: config?.model || 'claude-3-5-sonnet-20241022',
+    // 构建消息列表
+    const chatMessages: any[] = [];
+    if (systemPrompt) {
+      chatMessages.push({ role: 'system', content: systemPrompt });
+    }
+    chatMessages.push(...messages);
+
+    const stream = await this.client!.chat.completions.create({
+      model: config?.model || 'MiniMax-M2',
       max_tokens: 4096,
-      system: systemPrompt,
-      messages: messages as any,
+      messages: chatMessages,
+      stream: true,
     });
 
     for await (const chunk of stream) {
-      if (chunk.type === 'content_block_delta') {
-        if (chunk.delta.type === 'text_delta') {
-          callback(chunk.delta.text);
-        }
+      const content = chunk.choices[0]?.delta?.content;
+      if (content) {
+        callback(content);
       }
     }
   }
